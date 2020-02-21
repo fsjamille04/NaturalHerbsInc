@@ -5,7 +5,7 @@
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "naturalherbs"; 
+$dbname = "naturalherbspharminc"; 
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);

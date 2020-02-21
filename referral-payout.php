@@ -12,12 +12,12 @@
               <div class="card-header">
                 <div class="col-md-3">
                   <label>Invoice Date From : </label> 
-                  <input type='text' class="form-control datetimepicker1" id="datetimepicker1" />
+                  <input type='text' class="form-control datetimepicker1" id="datetimepicker1" autocomplete="off" />
                   <input type="hidden" name="date1" id="newdate1">
                 </div>
                 <div class="col-md-3">
                   <label> To :</label>     
-                  <input type='text' class="form-control datetimepicker1" id="datetimepicker2" />  
+                  <input type='text' class="form-control datetimepicker1" id="datetimepicker2" autocomplete="off" />  
                   <input type="hidden" name="date2" id="newdate2">
                 </div>
               </div>

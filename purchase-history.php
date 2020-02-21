@@ -42,7 +42,7 @@
                 </thead> 
                 <tbody> 
                  <?php 
-                  $sql="SELECT * FROM purchase ORDER BY dat DESC ";
+                  $sql="SELECT * FROM purchase Where dat >= '2020-01-01' ORDER BY dat DESC ";
 
                   $result = mysqli_query($conn,$sql);
                   $num=0;

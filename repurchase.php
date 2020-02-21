@@ -49,15 +49,18 @@
                     
                   </div>
                   <div class="form-group has-feedback">
-                    <input type="text" placeholder="Amount" required="" value="" name="rb" id="rb" class="form-control" readonly>
-                    
+                    <input type="text" placeholder="Amount" required="" value="" name="rb" id="rb" class="form-control" readonly> 
                   </div>
+                  <div   class="form-group has-feedback"  id="date-to"  > 
+                    <input type='text' class="form-control datetimepicker1" id="date"  name="date2" required  placeholder="2019-12-1"   autocomplete="off"/>   
+                </div>
                    
-                  <button type="submit" name="submits" class="btn btn-primary btn-block btn-flat">Purchase</button>
+                  <button type="submit" name="submits" class="btn btn-primary btn-block btn-flat submit" disabled>Purchase</button>
                    
                   <?php 
 
                   if( isset($_POST['submits']) ) {
+                  
                     $get = mysqli_query ($conn, "SELECT * FROM member where uid='".$_POST['userid']."'");
                     while( $get_data = mysqli_fetch_assoc($get) ){
                       $res_get_data = $get_data;
@@ -72,7 +75,7 @@
                     $gs = 0;  
                     $hid= $userid; 
 
-                    $hdat = gmdate("Y-m-d"); 
+                    $hdat = $_POST['date2']; 
                     $package = array(); 
   
                         $status = ($res_get_data['status_new'] =='3500')? '3500'  : '700' ;  
@@ -92,61 +95,98 @@
                                
                           }  
                           $x++;                    
-                        }   
+                        }  
                         if( $ids[0] != '' ){ 
+
                           $gs = ($package[0] =='3500')? ($srp * 0.05) * $qty  : ($srp * 0.03) * $qty; 
-                          $sql = $conn->query("INSERT INTO rebates (amount,personal,one,two,three,four,five,six,seven,eight,nine,id,dat,status_new,notify_payout) VALUES ('$rb','$gs',0,0,0,0,0,0,0,0,0,". $ids[0] .",'$hdat','$status','notify')");   
+                          $sql = $conn->query("INSERT INTO rebates (amount,personal_purchase_package,personal,one,two,three,four,five,six,seven,eight,nine,id,dat,status_new,notify_payout) VALUES ('$rb','$status','$gs',0,0,0,0,0,0,0,0,0,". $ids[0] .",'$hdat','$status','notify')");   
                         }
                       
                         if( $ids[1] != '' ){ 
-                          $gs = ($package[1] =='3500')? ($srp * 0.02) * $qty  : ($srp * 0.02) * $qty;  
-                          $sql = $conn->query("INSERT INTO rebates (one,two,three,four,five,six,seven,eight,nine,id,dat,status_new,notify_payout)  VALUES ('$gs','0','0','0','0','0','0','0','0',". $ids[1] .",'$hdat',". $package[1] .",'notify')"); 
+                          if( $package[1] =='3500' ){
+                            if( $package[0] =='3500' ){ 
+                              $gs = ($srp * 0.02) * $qty;
+                            }else{ 
+                              $gs = ($srp * 0.02) * $qty; 
+                            }
+                          } else {
+                            $gs = ($srp * 0.02) * $qty; 
+                          }
+                          // $gs = ($package[1] =='3500')? ($srp * 0.02) * $qty  : ($srp * 0.02) * $qty;  
+                          $sql = $conn->query("INSERT INTO rebates (personal_purchase_package,one,two,three,four,five,six,seven,eight,nine,id,dat,status_new,notify_payout)  VALUES ('$status','$gs','0','0','0','0','0','0','0','0',". $ids[1] .",'$hdat',". $package[1] .",'notify')"); 
 
                         } 
                         if( $ids[2] != '' ){ 
-                          $gs = ($package[2] =='3500')? ($srp * 0.03) * $qty  : ($srp * 0.01) * $qty;   
-                          $sql = $conn->query("INSERT INTO rebates (one,two,three,four,five,six,seven,eight,nine,id,dat,status_new,notify_payout)  VALUES ('0','$gs','0','0','0','0','0','0','0',". $ids[2] .",'$hdat',". $package[2] .",'notify')"); 
+                          if( $package[2] =='3500' ){
+                            if( $package[0] =='3500' ){ 
+                              $gs = ($srp * 0.03) * $qty;
+                            }else{ 
+                              $gs = ($srp * 0.01) * $qty; 
+                            }
+                          } else {
+                            $gs = ($srp * 0.01) * $qty; 
+                          }
+                          // $gs = ($package[2] =='3500')? ($srp * 0.03) * $qty  : ($srp * 0.01) * $qty;   
+                          $sql = $conn->query("INSERT INTO rebates (personal_purchase_package,one,two,three,four,five,six,seven,eight,nine,id,dat,status_new,notify_payout)  VALUES ('$status','0','$gs','0','0','0','0','0','0','0',". $ids[2] .",'$hdat',". $package[2] .",'notify')"); 
                              
                         }
                         if( $ids[3] != '' ){
-                          $gs = ($package[3] =='3500')? ($srp * 0.04) * $qty  : ($srp * 0.02) * $qty; 
-                          $sql =  $conn->query("INSERT INTO rebates (one,two,three,four,five,six,seven,eight,nine,id,dat,status_new,notify_payout)  VALUES ('0','0','$gs','0','0','0','0','0','0',". $ids[3] .",'$hdat',". $package[3] .",'notify')");  
+                          if( $package[3] =='3500' ){
+                            if( $package[0] =='3500' ){ 
+                              $gs = ($srp * 0.04) * $qty;
+                            }else{ 
+                              $gs = ($srp * 0.02) * $qty; 
+                            }
+                          } else {
+                            $gs = ($srp * 0.02) * $qty; 
+                          }
+                          // $gs = ($package[3] =='3500')? ($srp * 0.04) * $qty  : ($srp * 0.02) * $qty; 
+                          $sql =  $conn->query("INSERT INTO rebates (personal_purchase_package,one,two,three,four,five,six,seven,eight,nine,id,dat,status_new,notify_payout)  VALUES ('$status','0','0','$gs','0','0','0','0','0','0',". $ids[3] .",'$hdat',". $package[3] .",'notify')");  
                         } 
                         if( $ids[4] != '' ){
+                          if( $package[4] =='3500' ){
+                            if( $package[0] =='3500' ){ 
+                              $gs = ($srp * 0.02) * $qty;
+                            }else{ 
+                              $gs = ($srp * 0.02) * $qty; 
+                            }
+                          } else {
+                            $gs = ($srp * 0.02) * $qty; 
+                          }
                           $gs = ($package[4] =='3500')? ($srp * 0.02) * $qty  : ($srp * 0.02) * $qty; 
-                          $sql = $conn->query("INSERT INTO rebates (one,two,three,four,five,six,seven,eight,nine,id,dat,status_new,notify_payout)
-                              VALUES ('0','0','0','$gs','0','0','0','0','0',". $ids[4] .",'$hdat',". $package[4] .",'notify')");   
+                          $sql = $conn->query("INSERT INTO rebates (personal_purchase_package,one,two,three,four,five,six,seven,eight,nine,id,dat,status_new,notify_payout)
+                              VALUES ('$status','0','0','0','$gs','0','0','0','0','0',". $ids[4] .",'$hdat',". $package[4] .",'notify')");   
                         } 
  
                         if( $package[0] == 3500 ){
                           if(  $ids[5] != ''  ){
                             $gs = ($package[5] =='3500')? ($srp * 0.01) * $qty  : 0; 
                             if( $gs != 0 ){ 
-                              $sql =$conn->query( "INSERT INTO rebates (one,two,three,four,five,six,seven,eight,nine,id,dat,status_new,notify_payout) VALUES ('0','0','0','0','$gs','0','0','0','0',". $ids[5] .",'$hdat',". $package[5] .",'notify')" ); 
+                              $sql =$conn->query( "INSERT INTO rebates (personal_purchase_package,one,two,three,four,five,six,seven,eight,nine,id,dat,status_new,notify_payout) VALUES ('$status','0','0','0','0','$gs','0','0','0','0',". $ids[5] .",'$hdat',". $package[5] .",'notify')" ); 
                             }
                           } 
                           if( $ids[6] != '' ){
                             $gs = ($package[6] =='3500')? ($srp * 0.01) * $qty  : 0;
                             if( $gs != 0 ){  
-                              $sql = $conn->query("INSERT INTO rebates (one,two,three,four,five,six,seven,eight,nine,id,dat,status_new,notify_payout) VALUES ('0','0','0','0','0','$gs','0','0','0',". $ids[6] .",'$hdat',". $package[6] .",'notify')"); 
+                              $sql = $conn->query("INSERT INTO rebates (personal_purchase_package,one,two,three,four,five,six,seven,eight,nine,id,dat,status_new,notify_payout) VALUES ('$status','0','0','0','0','0','$gs','0','0','0',". $ids[6] .",'$hdat',". $package[6] .",'notify')"); 
                             }
                           } 
                           if( $ids[7] != '' ){
                             $gs = ($package[7] =='3500')? ($srp * 0.01) * $qty  : 0;
                             if( $gs != 0 ){  
-                              $sql = $conn->query("INSERT INTO rebates (one,two,three,four,five,six,seven,eight,nine,id,dat,status_new,notify_payout) VALUES ('0','0','0','0','0','0','$gs','0','0',". $ids[7] .",'$hdat',". $package[7] .",'notify')"); 
+                              $sql = $conn->query("INSERT INTO rebates (personal_purchase_package,one,two,three,four,five,six,seven,eight,nine,id,dat,status_new,notify_payout) VALUES ('$status','0','0','0','0','0','0','$gs','0','0',". $ids[7] .",'$hdat',". $package[7] .",'notify')"); 
                             }
                           } 
                           if( $ids[8] != '' ){
                             $gs = ($package[8] =='3500')? ($srp * 0.01) * $qty  : 0;
                             if( $gs != 0 ){  
-                              $sql = $conn->query("INSERT INTO rebates (one,two,three,four,five,six,seven,eight,nine,id,dat,status_new,notify_payout) VALUES ('0','0','0','0','0','0','0','$gs','0',". $ids[8] .",'$hdat',". $package[8] .",'notify')");  
+                              $sql = $conn->query("INSERT INTO rebates (personal_purchase_package,one,two,three,four,five,six,seven,eight,nine,id,dat,status_new,notify_payout) VALUES ('$status','0','0','0','0','0','0','0','$gs','0',". $ids[8] .",'$hdat',". $package[8] .",'notify')");  
                             }
                           } 
                           if( $ids[9] != '' ){
                             $gs = ($package[9] =='3500')? ($srp * 0.01) * $qty  : 0;
                             if( $gs != 0 ){  
-                              $sql = $conn->query("INSERT INTO rebates (one,two,three,four,five,six,seven,eight,nine,id,dat,status_new,notify_payout) VALUES ('0','0','0','0','0','0','0','0','$gs',". $ids[9] .",'$hdat',". $package[9] .",'notify')");   
+                              $sql = $conn->query("INSERT INTO rebates (personal_purchase_package,one,two,three,four,five,six,seven,eight,nine,id,dat,status_new,notify_payout) VALUES ('$status','0','0','0','0','0','0','0','0','$gs',". $ids[9] .",'$hdat',". $package[9] .",'notify')");   
                             }
                           } 
                         } 
@@ -175,6 +215,21 @@ include('script.php');
  ?>  
 
 <script type="text/javascript">
+
+$('#date').datepicker({
+    autoclose: true,
+    format: "yyyy-mm-dd", 
+  });
+
+  $('#date').on('change',function(){ 
+    console.table(date);
+    if( date == '' ) { 
+      $('.submit').attr('disabled','disabled');
+    } else {
+      $('.submit').removeAttr('disabled');
+    }
+  });
+
   function isEmpty(obj) {
     for(var prop in obj) {
         if(obj.hasOwnProperty(prop))
@@ -200,7 +255,7 @@ include('script.php');
     });
 
     $('#userid').keyup(function(){
-      var userid = $(this).val();
+      var userid = $.trim($(this).val());
       $.ajax({
       type : 'POST',
       datatype: 'JSON',

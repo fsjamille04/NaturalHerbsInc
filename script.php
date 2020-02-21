@@ -18,8 +18,11 @@
   if (window.location.href.indexOf("index") > -1) {
     $('#index').addClass('active');
   }
-  if (window.location.href.indexOf("member") > -1) {
-    $('#member').addClass('active');
+  if (window.location.href.indexOf("new-member") > -1) {
+    $('#new-member').addClass('active');
+  }
+  if (window.location.href.indexOf("old-member") > -1) {
+    $('#old-member').addClass('active');
   }
   if (window.location.href.indexOf("referral") > -1) {
     $('#referral').addClass('active');
@@ -43,9 +46,16 @@
     $('#code').addClass('active');
   }
   $(function() {
+    // $(".table").DataTable({
+    //   "paging": true,});
     $("#example1").DataTable({
       "paging": true,});
-    $('#example2').DataTable({
+      $("#append_data").DataTable({
+      "paging": true,});
+      $(".table-custom").DataTable({ 
+        "paging": true,
+       });
+      $('#example2').DataTable({
       "paging": true,
       "lengthChange": false,
       "searching": true,
@@ -57,6 +67,4 @@
 
   </script>
 
-  </body>
-
-</html>
+ 

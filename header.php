@@ -110,10 +110,18 @@ if(!isset($_SESSION['pdid2']) || (trim($_SESSION['pdid2']) == '')) {
             </a>
           </li>
           <li class="nav-item">
-            <a href="member.php" id="member" class="nav-link">
+            <a href="old-member.php" id="old-member" class="nav-link">
               <i class="nav-icon fas fa-users"></i>
               <p>
-                 Members
+                Old Members
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="new-member.php" id="new-member" class="nav-link">
+              <i class="nav-icon fas fa-users"></i>
+              <p>
+                 New Members
               </p>
             </a>
           </li>

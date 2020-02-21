@@ -78,6 +78,11 @@
                  </select>
                 </div>
 
+                <div   class="form-group has-feedback"  id="date-to"  >
+                  <label> To :</label>     
+                  <input type='text' class="form-control datetimepicker1" id="datetimepicker2" />  
+                  <input type="hidden" name="date2" id="newdate2">
+                </div>
                  
                 <button type="submit" name="register" class="btn btn-danger btn-block btn-flat " id="register" disabled="">Register</button>
                  
@@ -101,7 +106,7 @@ include('script.php');
   $(document).ready(function(){
 
     $('#ref_id').on('keyup' ,function(){ 
-      var val = $(this).val();
+      var val = $.trim($(this).val());
 
       $.ajax({
         type : 'POST',
@@ -128,7 +133,7 @@ include('script.php');
     });
 
     $('#user_id').on('keyup' ,function(){ 
-      var val = $(this).val();
+      var val = $.trim($(this).val());
       var kit = $('.select_kit_variant').val();
       $.ajax({
         type : 'POST',

@@ -15,6 +15,14 @@
               <!-- /.card-header -->
               <div class="card-body col-md-4 offset-md-4"> 
                 <form method="post" id="register_form">
+                  <div class="form-group  has-feedback">
+                    <select class="upgrade-or-add-user form-control" required="" name="upgrade-or-add-user">
+                      <option value="">SELECT UPGRADE or ADD NEW USER</option>
+                      <option value="upgrade">Upgrade Account</option>
+                      <option value="add">Add NEW USER</option>
+                    </select>
+                  </div> 
+                  <div id="show" style="display: none">
                   <div class="form-group has-feedback">
                     <input type="text" placeholder="Sponsor ID" required="" value="" name="ref_id" id="ref_id" class="form-control">
                   </div>
@@ -78,9 +86,13 @@
                  </select>
                 </div>
 
+                <div   class="form-group has-feedback"  id="date-to"  > 
+                  <input type='text' class="form-control datetimepicker1" id="date" required  placeholder="2019-12-1"   autocomplete="off"/>  
+                  <input type="hidden" name="date2" id="newdate2">
+                </div>
                  
                 <button type="submit" name="register" class="btn btn-danger btn-block btn-flat " id="register" disabled="">Register</button>
-                 
+                </div>
                 </form>
               </div>
               <!-- /.card-body -->
@@ -99,7 +111,10 @@ include('script.php');
  ?>  
 <script> 
   $(document).ready(function(){
-
+    $('#date').datepicker({
+      autoclose: true,
+      // format: "dd/mm/yyyy",
+    });
     $('#ref_id').on('keyup' ,function(){ 
       var val = $(this).val();
 
@@ -118,6 +133,14 @@ include('script.php');
 
     });
 
+    $('.upgrade-or-add-user').on('change',function(){  
+      var val = $(this).val(); 
+      if( val == '' ){
+        $('#show').css('display','none');
+      } else {
+        $('#show').css('display','block');
+      }
+    });
     $('.select_kit_variant').on('change',function(){  
       var val = $(this).val(); 
       if( val == '' ){
@@ -126,7 +149,6 @@ include('script.php');
         $('#uid_field').css('display','block');
       }
     });
-
     $('#user_id').on('keyup' ,function(){ 
       var val = $(this).val();
       var kit = $('.select_kit_variant').val();
@@ -157,6 +179,7 @@ include('script.php');
  
     $('#register_form').on('submit',function(e){
       e.preventDefault();
+      var acc = $('.upgrade-or-add-user ').val();
       var kit = $('.select_kit_variant ').val();
       var sid = $('#ref_id').val();
       var fname = $('#first_name').val();
@@ -166,6 +189,7 @@ include('script.php');
       var phone = $('#phone').val();
       var user_id = $('#user_id').val();
       var pick_up = $('#pick_up').val();
+      var date = $('#date').val();
  
       $.ajax({
         type : 'POST',
@@ -173,6 +197,7 @@ include('script.php');
         url: 'function.php',
         data:{
           action: 'register_user',
+          acc : acc,
           kit : kit,
           sid : sid,
           fname : fname,
@@ -181,7 +206,8 @@ include('script.php');
           ad : ad,
           phone : phone,
           user_id : user_id,
-          pick_up : pick_up 
+          pick_up : pick_up,
+          date : date  
         }, 
         success: function(data){
           alert(data); 

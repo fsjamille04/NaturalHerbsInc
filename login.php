@@ -59,7 +59,7 @@ include("dbconnection.php");
 
           <form action="" method="post">
             <div class="input-group mb-3">
-              <input type="text" class="form-control" placeholder="Email" name="username1">
+              <input type="text" class="form-control" placeholder="User" name="username1">
               <div class="input-group-append">
                 <div class="input-group-text">
                   <span class="fas fa-user"></span>

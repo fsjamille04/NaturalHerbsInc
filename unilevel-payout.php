@@ -12,14 +12,15 @@
               <div class="card-header">
                 <div class="col-md-3"  id="date-from" >
                   <label>Invoice Date From : </label> 
-                  <input type='text' class="form-control datetimepicker1" id="datetimepicker1" />
+                  <input type='text' class="form-control datetimepicker1" id="datetimepicker1" autocomplete="off" />
                   <input type="hidden" name="date1" id="newdate1">
                 </div>
                 <div class="col-md-3" id="date-to" style="display: none">
                   <label> To :</label>     
-                  <input type='text' class="form-control datetimepicker1" id="datetimepicker2" />  
+                  <input type='text' class="form-control datetimepicker1" id="datetimepicker2" autocomplete="off" />  
                   <input type="hidden" name="date2" id="newdate2">
                 </div>
+                <div class="col-md-3 ml-md-auto text-right" style="display: none" id="update-all-M"  ><button type="button" id="btnNoMaintenance" class="btn btn-danger"  data-toggle="modal" data-target="#modalNoMaintenance" >Update All NO MAINTENANCE</button></div>
               </div>
               <!-- /.card-header -->
               <div class="card-body"> 
@@ -71,26 +72,51 @@
               <div class="modal-footer"> 
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 <button type="submit" class="btn btn-primary" name="payout-admin" id="payout-admin" onclick="printDiv()">Payout</button>   
-                <button type="button" class="btn btn-danger" id="update-payout"   style="display: none">Didn`t reach Maintenance Qouta - Update</button>
+                <button type="button" class="btn btn-danger" id="update-payout"   style="display: none" >Didn`t reach Maintenance Qouta - Update</button>
               </div> 
           </div>
         </div> 
       </div>
 
-      <!-- <div class="modal fade hmodal-danger" id="printAdminSection" tabindex="-1" role="dialog"  aria-hidden="true">       
+      <div class="modal fade hmodal-danger" id="modalNoMaintenance" tabindex="-1" role="dialog"  aria-hidden="true">       
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
             <div class="color-line"></div>
             <div class="modal-header"> 
             </div> 
-              <div class="modal-body"  id="printAdminSectionModal" >  </div>
+              <div class="modal-body"  id="bodyNoMaintenance" >  
+              <table id="noMaintenance" class="table table-bordered table-striped referral-table .table-custom">
+                    <thead>
+                      <tr>
+                        <th>User ID</th>
+                        <th>Fullname</th>   
+                        <th>Package</th>   
+                        <th>Total Purchase</th>    
+                        <th>Date</th>    
+                      </tr>
+                    </thead>
+
+                    <tbody id="">
+       
+                    </tbody>   
+                    <tfoot>
+                      <tr>
+                        <th>User ID</th>
+                        <th>Fullname</th>  
+                        <th>Package</th>  
+                        <th>Total Purchase</th>     
+                        <th>Date</th>    
+                      </tr>
+                    </tfoot>   
+                  </table> 
+              </div>
             <div class="modal-footer"> 
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary" name="payout_admin_2" id="payout_admin_2">Payout</button>   
+              <button type="submit" class="btn btn-danger" name="AllnonMaintain" id="AllnonMaintain">Update ALL</button>   
             </div> 
           </div>
         </div> 
-      </div> -->
+      </div>
     </div>
 
 <?php 
@@ -112,10 +138,7 @@ include('script.php');
         reg : reg 
       },
       
-      success: function(data){
-         // console.log(data);
-        // $('#printAdminSectionModal').html(data);
-        //location.reload();
+      success: function(data){ 
       alert(data);
         $('#printsection').modal('toggle');
       }
@@ -124,9 +147,61 @@ include('script.php');
   };
   $('#loading-indicator').show();   
 jQuery(document).ready(function(){  
+
+  $('#btnNoMaintenance').on('click',function(){
+
+    $('#noMaintenance tbody').empty();
+    var dateFrom= $('#datetimepicker1').val();
+    var dateTo= $('#datetimepicker2').val();
+     
+    $.ajax({
+      type : 'POST', 
+      url: 'function.php',
+      data:{
+        action: 'show_noMaintenance', 
+        dateFrom : dateFrom,
+        dateTo : dateTo,
+      },
+      success: function(data){   
+        $('#noMaintenance tbody').append(data);
+      },
+error: function(error) {
+    alert(error);
+}
+    });  
+
+  });
+
+  $('#AllnonMaintain').on('click',function(){ 
+    var uid = []; 
+    $("#noMaintenance .getId").each(function() {
+      uid.push(this.id);
+    });
+    var dateFrom = $('#newdate1').val();
+    var dateTo = $('#newdate2').val();
+    $.ajax({
+      type : 'POST', 
+      url: 'function.php',
+      data:{
+        action: 'update_non_maintain', 
+        uid : uid, 
+        dateFrom : dateFrom, 
+        dateTo : dateTo, 
+      },
+      success: function(data){   
+        if( data =='success' ){
+          location.reload(true); 
+        }
+      },
+error: function(error) {
+    alert(error);
+}
+    });  
+  });
+
   $('.datetimepicker1').datepicker({
     autoclose: true,
-    // format: "dd/mm/yyyy",
+    format: "yyyy-mm-dd", 
   });
   $('#PrintModal').html();
   $('#datetimepicker1').change(function(){
@@ -154,7 +229,7 @@ jQuery(document).ready(function(){
       $('#loading-indicator').show(); 
 
       if( package == 3500 ){
-        if( amount >= 1000 ){
+        if( amount >= 5000 ){
           $('#update-payout').css('display', 'none');
           $('#payout-admin').css('display', 'block'); 
         } else { 
@@ -163,7 +238,7 @@ jQuery(document).ready(function(){
         }
       }
       if( package == 700 ){
-        if( amount >= 500 ){
+        if( amount >= 2000 ){
           $('#update-payout').css('display', 'none');
           $('#payout-admin').css('display', 'block'); 
         } else { 
@@ -218,6 +293,13 @@ jQuery(document).ready(function(){
           $('#date-to').css('display', 'none');
       } else {
           $('#date-to').css('display', 'block'); 
+      }
+  });  
+  $('#datetimepicker2').on('change',function(){  
+      if( $(this).val() == ''  ){
+          $('#update-all-M').css('display', 'none');
+      } else {
+          $('#update-all-M').css('display', 'block'); 
       }
   });  
   $('#datetimepicker2').on('change',function(){
